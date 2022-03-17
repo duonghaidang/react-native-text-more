@@ -1,0 +1,26 @@
+{
+  "name": "react-native-text-more",
+  "version": "1.0.0",
+  "description": "Add a 'See More' and optionally a 'See Less' button to text that exceeds a given number of lines",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duonghaidang/react-native-text-see-more.git"
+  },
+  "main": "index.tsx",
+  "files": [
+    "index.tsx",
+    "README.md"
+  ],
+  "author": "duonghaidang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/duonghaidang/react-native-text-see-more/issues"
+  },
+  "homepage": "https://github.com/duonghaidang/react-native-text-see-more#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native-text-see-more"
+  ]
+}
