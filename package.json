@@ -1,5 +1,5 @@
 {
-  "name": "react-native-text-more",
+  "name": "@duonghaidang/react-native-text-more",
   "version": "1.0.0",
   "description": "Add a 'See More' and optionally a 'See Less' button to text that exceeds a given number of lines",
   "repository": {
