@@ -1,15 +1,15 @@
-## react-native-text-more
+## @duonghaidang/react-native-text-more
 
 ### Installation
 
 ```
-npm i react-native-text-more --save
+npm i @duonghaidang/react-native-text-more --save
 ```
 
 or with yarn
 
 ```
-yarn add react-native-text-more
+yarn add @duonghaidang/react-native-text-more
 ```
 
 ## Props
