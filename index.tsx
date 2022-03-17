@@ -84,7 +84,7 @@ const TextMore = (props: TextMoreProps) => {
         {titleMore || "See more"}
       </Text>
     );
-  }, [renderMore, setFullHeight, showLess, showMore, titleMore]);
+  }, [renderMore, setFullHeight, showLess, showMore, titleMore, styleTextMore]);
 
   const renderSeeLess = useCallback(() => {
     if (!showLess) return;
@@ -98,7 +98,7 @@ const TextMore = (props: TextMoreProps) => {
         {titleLess || "See less"}
       </Text>
     );
-  }, [renderLess, setLimitHeight, showLess, titleLess]);
+  }, [renderLess, setLimitHeight, showLess, titleLess, styleTextLess]);
 
   useEffect(() => {
     typeof numberOfLines === "number" && numberOfLines > 0 && checkHeight();
