@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TextProps, TextStyle, View } from "react-native";
 export interface TextMoreProps extends TextProps {
   children: string;
@@ -13,7 +13,7 @@ export interface TextMoreProps extends TextProps {
 
 const INFINITY_NUMBER = Number.MAX_SAFE_INTEGER;
 
-const TextMore = (props: TextMoreProps) => {
+const TextMore = memo((props: TextMoreProps) => {
   const {
     children,
     numberOfLines,
@@ -113,7 +113,7 @@ const TextMore = (props: TextMoreProps) => {
       {renderSeeLess()}
     </View>
   );
-};
+});
 
 export default TextMore;
 

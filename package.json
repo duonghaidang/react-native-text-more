@@ -38,12 +38,5 @@
     "javascript",
     "typescript",
     "inline"
-  ],
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
-  "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
-  }
+  ]
 }
