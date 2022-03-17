@@ -65,9 +65,7 @@ const TextMore = memo((props: TextMoreProps) => {
         });
       });
       refText.current.measure((_x, _y, _width, heightLimit) => {
-        if (heightFull > heightLimit) {
-          setShowMore(true);
-        }
+        setShowMore(heightFull > heightLimit);
       });
     }
   }, [setFullHeight, setLimitHeight]);
