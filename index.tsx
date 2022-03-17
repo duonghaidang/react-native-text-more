@@ -1,20 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-
-interface MyTextMoreProps {
+import { StyleSheet, Text, TextProps, TextStyle, View } from "react-native";
+export interface TextMoreProps extends TextProps {
   children: string;
   numberOfLines?: number;
   titleMore?: string;
   titleLess?: string;
   renderMore?: (onPress: () => void) => React.ReactNode;
   renderLess?: (onPress: () => void) => React.ReactNode;
+  styleTextMore?: TextStyle;
+  styleTextLess?: TextStyle;
 }
 
 const INFINITY_NUMBER = Number.MAX_SAFE_INTEGER;
 
-const MyTextMore = (
-  props: React.FC<React.ComponentProps<typeof Text> & MyTextMoreProps>
-) => {
+const TextMore = (props: TextMoreProps) => {
   const {
     children,
     numberOfLines,
@@ -22,6 +21,8 @@ const MyTextMore = (
     renderLess,
     titleMore,
     titleLess,
+    styleTextMore,
+    styleTextLess,
     ...rest
   } = props;
 
@@ -79,7 +80,7 @@ const MyTextMore = (
     };
     if (renderMore) return renderMore(onPress);
     return (
-      <Text onPress={onPress} style={styles.text}>
+      <Text onPress={onPress} style={styleTextMore || styles.text}>
         {titleMore || "See more"}
       </Text>
     );
@@ -93,7 +94,7 @@ const MyTextMore = (
     };
     if (renderLess) return renderLess(onPress);
     return (
-      <Text onPress={onPress} style={styles.text}>
+      <Text onPress={onPress} style={styleTextLess || styles.text}>
         {titleLess || "See less"}
       </Text>
     );
@@ -114,7 +115,7 @@ const MyTextMore = (
   );
 };
 
-export default MyTextMore;
+export default TextMore;
 
 const styles = StyleSheet.create({
   text: {

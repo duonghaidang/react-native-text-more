@@ -7,6 +7,7 @@
     "url": "git+https://github.com/duonghaidang/react-native-text-more.git"
   },
   "main": "index.tsx",
+  "types": "index.d.ts",
   "files": [
     "index.tsx",
     "README.md"
@@ -21,6 +22,28 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "react-native-text-more"
-  ]
+    "react-native-text-more",
+    "react-native-component",
+    "react-native",
+    "read",
+    "more",
+    "less",
+    "text",
+    "react",
+    "react native",
+    "mobile",
+    "ios",
+    "android",
+    "ui",
+    "javascript",
+    "typescript",
+    "inline"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
 }
