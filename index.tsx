@@ -110,7 +110,6 @@ const TextMore = memo((props: TextMoreProps) => {
 
   const onLayout = useCallback((e: LayoutChangeEvent) => {
     const currentHeight: number = e.nativeEvent?.layout?.height;
-
     if (!heightFull) {
       heightFull = currentHeight;
     } else {
@@ -125,13 +124,11 @@ const TextMore = memo((props: TextMoreProps) => {
     if (!numberOfLines || (numberOfLines && numberOfLines <= 0) || ready)
       return null;
     return (
-      <View style={{ backgroundColor: "red" }}>
-        <Text {...rest} numberOfLines={numberOfLines}>
-          {children}
-        </Text>
-      </View>
+      <Text {...rest} style={style} numberOfLines={numberOfLines}>
+        {children}
+      </Text>
     );
-  }, [children, numberOfLines, ready, rest]);
+  }, [children, numberOfLines, ready, rest, style]);
 
   const textStyle: StyleProp<TextStyle> = useMemo(
     () =>
@@ -142,7 +139,7 @@ const TextMore = memo((props: TextMoreProps) => {
   );
 
   useEffect(() => {
-    numberOfLines && numberOfLines > 0 && checkHeight();
+    typeof numberOfLines === "number" && numberOfLines > 0 && checkHeight();
   }, [checkHeight, numberOfLines, children]);
 
   return (
