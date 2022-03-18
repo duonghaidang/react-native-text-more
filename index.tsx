@@ -1,5 +1,12 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, TextProps, TextStyle, View } from "react-native";
+import {
+  LayoutChangeEvent,
+  StyleSheet,
+  Text,
+  TextProps,
+  TextStyle,
+  View,
+} from "react-native";
 export interface TextMoreProps extends TextProps {
   children: string;
   numberOfLines?: number;
