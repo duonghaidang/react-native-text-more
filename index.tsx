@@ -26,6 +26,8 @@ const TextMore = memo((props: TextMoreProps) => {
     ...rest
   } = props;
 
+  let heightFull: number = 0;
+
   const refText = useRef<Text>(null);
 
   const [showMore, setShowMore] = useState<boolean>(false);
@@ -47,28 +49,20 @@ const TextMore = memo((props: TextMoreProps) => {
   }, []);
 
   const checkHeight = useCallback(async () => {
-    let heightFull: number = 0;
     if (refText.current) {
       await new Promise((resolve) => {
         requestAnimationFrame(() => {
           resolve(true);
         });
       });
-      setFullHeight();
-      refText.current.measure((_x, _y, _width, height) => {
-        heightFull = height;
-      });
-      setLimitHeight();
       await new Promise((resolve) => {
         requestAnimationFrame(() => {
           resolve(true);
         });
       });
-      refText.current.measure((_x, _y, _width, heightLimit) => {
-        setShowMore(heightFull > heightLimit);
-      });
+      setLimitHeight();
     }
-  }, [setFullHeight, setLimitHeight]);
+  }, [setLimitHeight]);
 
   const renderSeeMore = useCallback(() => {
     if (!showMore || showLess) return;
@@ -78,11 +72,11 @@ const TextMore = memo((props: TextMoreProps) => {
     };
     if (renderMore) return renderMore(onPress);
     return (
-      <Text onPress={onPress} style={styleTextMore || styles.text}>
-        {titleMore || "See more"}
+      <Text onPress={onPress} style={styles.text}>
+        {titleMore || 'See more'}
       </Text>
     );
-  }, [renderMore, setFullHeight, showLess, showMore, titleMore, styleTextMore]);
+  }, [renderMore, setFullHeight, showLess, showMore, titleMore]);
 
   const renderSeeLess = useCallback(() => {
     if (!showLess) return;
@@ -92,33 +86,45 @@ const TextMore = memo((props: TextMoreProps) => {
     };
     if (renderLess) return renderLess(onPress);
     return (
-      <Text onPress={onPress} style={styleTextLess || styles.text}>
-        {titleLess || "See less"}
+      <Text onPress={onPress} style={styles.text}>
+        {titleLess || 'See less'}
       </Text>
     );
-  }, [renderLess, setLimitHeight, showLess, titleLess, styleTextLess]);
+  }, [renderLess, setLimitHeight, showLess, titleLess]);
+
+  const onLayout = useCallback((e: LayoutChangeEvent) => {
+    const currentHeight: number = e.nativeEvent?.layout?.height;
+
+    if (!heightFull) {
+      heightFull = currentHeight;
+    } else {
+      if (heightFull > currentHeight) {
+        setShowMore(true);
+      }
+    }
+  }, []);
 
   useEffect(() => {
-    typeof numberOfLines === "number" && numberOfLines > 0 && checkHeight();
-  }, [checkHeight, numberOfLines]);
+    typeof numberOfLines === 'number' && numberOfLines > 0 && checkHeight();
+  }, [checkHeight, numberOfLines, children]);
 
   return (
     <View>
-      <Text ref={refText} {...rest}>
+      <Text ref={refText} {...rest} onLayout={onLayout}>
         {children}
       </Text>
       {renderSeeMore()}
       {renderSeeLess()}
     </View>
   );
-});
+};
 
-export default TextMore;
+export default MyTextMore;
 
 const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     marginTop: 2,
-    color: "#5F94F3",
+    color: '#5F94F3',
   },
 });
