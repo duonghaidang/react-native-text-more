@@ -73,7 +73,7 @@ const TextMore = memo((props: TextMoreProps) => {
     if (renderMore) return renderMore(onPress);
     return (
       <Text onPress={onPress} style={styles.text}>
-        {titleMore || 'See more'}
+        {titleMore || "See more"}
       </Text>
     );
   }, [renderMore, setFullHeight, showLess, showMore, titleMore]);
@@ -87,7 +87,7 @@ const TextMore = memo((props: TextMoreProps) => {
     if (renderLess) return renderLess(onPress);
     return (
       <Text onPress={onPress} style={styles.text}>
-        {titleLess || 'See less'}
+        {titleLess || "See less"}
       </Text>
     );
   }, [renderLess, setLimitHeight, showLess, titleLess]);
@@ -105,7 +105,7 @@ const TextMore = memo((props: TextMoreProps) => {
   }, []);
 
   useEffect(() => {
-    typeof numberOfLines === 'number' && numberOfLines > 0 && checkHeight();
+    typeof numberOfLines === "number" && numberOfLines > 0 && checkHeight();
   }, [checkHeight, numberOfLines, children]);
 
   return (
@@ -117,14 +117,14 @@ const TextMore = memo((props: TextMoreProps) => {
       {renderSeeLess()}
     </View>
   );
-};
+});
 
-export default MyTextMore;
+export default TextMore;
 
 const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     marginTop: 2,
-    color: '#5F94F3',
+    color: "#5F94F3",
   },
 });
