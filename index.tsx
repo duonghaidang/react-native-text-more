@@ -1,6 +1,14 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   LayoutChangeEvent,
+  StyleProp,
   StyleSheet,
   Text,
   TextProps,
@@ -14,8 +22,9 @@ export interface TextMoreProps extends TextProps {
   titleLess?: string;
   renderMore?: (onPress: () => void) => React.ReactNode;
   renderLess?: (onPress: () => void) => React.ReactNode;
-  styleTextMore?: TextStyle;
-  styleTextLess?: TextStyle;
+  styleTextMore?: StyleProp<TextStyle>;
+  styleTextLess?: StyleProp<TextStyle>;
+  style?: StyleProp<TextStyle>;
 }
 
 const INFINITY_NUMBER = Number.MAX_SAFE_INTEGER;
@@ -28,8 +37,7 @@ const TextMore = memo((props: TextMoreProps) => {
     renderLess,
     titleMore,
     titleLess,
-    styleTextMore,
-    styleTextLess,
+    style,
     ...rest
   } = props;
 
@@ -37,6 +45,7 @@ const TextMore = memo((props: TextMoreProps) => {
 
   const refText = useRef<Text>(null);
 
+  const [ready, setReady] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
   const [showLess, setShowLess] = useState<boolean>(false);
 
@@ -108,18 +117,40 @@ const TextMore = memo((props: TextMoreProps) => {
       if (heightFull > currentHeight) {
         setShowMore(true);
       }
+      setReady(true);
     }
   }, []);
 
+  const renderFakeText = useCallback(() => {
+    if (!numberOfLines || (numberOfLines && numberOfLines <= 0) || ready)
+      return null;
+    return (
+      <View style={{ backgroundColor: "red" }}>
+        <Text {...rest} numberOfLines={numberOfLines}>
+          {children}
+        </Text>
+      </View>
+    );
+  }, [children, numberOfLines, ready, rest]);
+
+  const textStyle: StyleProp<TextStyle> = useMemo(
+    () =>
+      !numberOfLines || (numberOfLines && numberOfLines <= 0) || ready
+        ? style
+        : { opacity: 0, position: "absolute" },
+    [numberOfLines, ready, style]
+  );
+
   useEffect(() => {
-    typeof numberOfLines === "number" && numberOfLines > 0 && checkHeight();
+    numberOfLines && numberOfLines > 0 && checkHeight();
   }, [checkHeight, numberOfLines, children]);
 
   return (
     <View>
-      <Text ref={refText} {...rest} onLayout={onLayout}>
+      <Text ref={refText} {...rest} style={textStyle} onLayout={onLayout}>
         {children}
       </Text>
+      {renderFakeText()}
       {renderSeeMore()}
       {renderSeeLess()}
     </View>
