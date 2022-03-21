@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { memo, useCallback, useRef, useState } from "react";
 import {
   LayoutChangeEvent,
   StyleProp,
@@ -27,11 +20,8 @@ export interface TextMoreProps extends TextProps {
   style?: StyleProp<TextStyle>;
 }
 
-const INFINITY_NUMBER = Number.MAX_SAFE_INTEGER;
-
 const TextMore = memo((props: TextMoreProps) => {
   const {
-    children,
     numberOfLines,
     renderMore,
     renderLess,
@@ -42,13 +32,15 @@ const TextMore = memo((props: TextMoreProps) => {
   } = props;
 
   let heightFull: number = 0;
+  let heightLimit: number = 0;
 
   const refText = useRef<Text>(null);
 
-  const [ready, setReady] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
   const [showLess, setShowLess] = useState<boolean>(false);
+  const [onReady, setOnReady] = useState<boolean>(false);
 
+  //! Set numberOfLines of text
   const setLimitHeight = useCallback(() => {
     if (refText.current && numberOfLines) {
       refText?.current?.setNativeProps({
@@ -59,27 +51,20 @@ const TextMore = memo((props: TextMoreProps) => {
   const setFullHeight = useCallback(() => {
     if (refText.current) {
       refText?.current?.setNativeProps({
-        numberOfLines: INFINITY_NUMBER,
+        numberOfLines: null,
       });
     }
   }, []);
 
+  //! Check show more or none
   const checkHeight = useCallback(async () => {
-    if (refText.current) {
-      await new Promise((resolve) => {
-        requestAnimationFrame(() => {
-          resolve(true);
-        });
-      });
-      await new Promise((resolve) => {
-        requestAnimationFrame(() => {
-          resolve(true);
-        });
-      });
-      setLimitHeight();
+    if (heightFull && heightLimit) {
+      setOnReady(true);
+      setShowMore(heightLimit < heightFull);
     }
-  }, [setLimitHeight]);
+  }, [heightFull, heightLimit]);
 
+  //! Render component
   const renderSeeMore = useCallback(() => {
     if (!showMore || showLess) return;
     const onPress = () => {
@@ -93,7 +78,6 @@ const TextMore = memo((props: TextMoreProps) => {
       </Text>
     );
   }, [renderMore, setFullHeight, showLess, showMore, titleMore]);
-
   const renderSeeLess = useCallback(() => {
     if (!showLess) return;
     const onPress = () => {
@@ -108,46 +92,37 @@ const TextMore = memo((props: TextMoreProps) => {
     );
   }, [renderLess, setLimitHeight, showLess, titleLess]);
 
-  const onLayout = useCallback((e: LayoutChangeEvent) => {
-    const currentHeight: number = e.nativeEvent?.layout?.height;
-    if (!heightFull) {
-      heightFull = currentHeight;
-    } else {
-      if (heightFull > currentHeight) {
-        setShowMore(true);
-      }
-      setReady(true);
-    }
+  //! Get height of text
+  const onLayoutLimit = useCallback((e: LayoutChangeEvent) => {
+    heightLimit = e.nativeEvent?.layout?.height;
+    checkHeight();
+  }, []);
+  const onLayoutFull = useCallback((e: LayoutChangeEvent) => {
+    heightFull = e.nativeEvent?.layout?.height;
+    checkHeight();
   }, []);
 
-  const renderFakeText = useCallback(() => {
-    if (!numberOfLines || (numberOfLines && numberOfLines <= 0) || ready)
-      return null;
+  const renderFullText = useCallback(() => {
+    if (onReady) return null;
     return (
-      <Text {...rest} style={style} numberOfLines={numberOfLines}>
-        {children}
+      <Text onLayout={onLayoutFull} style={[style, styles.fullText]}>
+        {rest?.children}
       </Text>
     );
-  }, [children, numberOfLines, ready, rest, style]);
-
-  const textStyle: StyleProp<TextStyle> = useMemo(
-    () =>
-      !numberOfLines || (numberOfLines && numberOfLines <= 0) || ready
-        ? style
-        : { opacity: 0, position: "absolute" },
-    [numberOfLines, ready, style]
-  );
-
-  useEffect(() => {
-    typeof numberOfLines === "number" && numberOfLines > 0 && checkHeight();
-  }, [checkHeight, numberOfLines, children]);
+  }, [onLayoutFull, onReady, rest?.children, style]);
 
   return (
     <View>
-      <Text ref={refText} {...rest} style={textStyle} onLayout={onLayout}>
-        {children}
+      <Text
+        ref={refText}
+        numberOfLines={numberOfLines}
+        {...rest}
+        style={style}
+        onLayout={onLayoutLimit}
+      >
+        {rest?.children}
       </Text>
-      {renderFakeText()}
+      {renderFullText()}
       {renderSeeMore()}
       {renderSeeLess()}
     </View>
@@ -161,5 +136,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginTop: 2,
     color: "#5F94F3",
+  },
+  fullText: {
+    position: "absolute",
+    opacity: 0,
   },
 });
